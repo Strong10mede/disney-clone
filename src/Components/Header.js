@@ -4,7 +4,7 @@ import { auth, provider, signInWithPopup } from "../firebase";
 //dispatch the actions to the store
 //retrieve data from the store
 import { useDispatch, useSelector } from "react-redux";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   selectUserName,
   selectUserPhoto,
@@ -15,7 +15,7 @@ import { useEffect } from "react";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 function Header() {
   const dispatch = useDispatch();
-  const history = useHistory();
+  const navigate = useNavigate();
   const userName = useSelector(selectUserName);
   const userPhoto = useSelector(selectUserPhoto);
   const setUser = (user) => {
@@ -38,7 +38,7 @@ function Header() {
       signOut(auth)
         .then(() => {
           dispatch(setSignOutState());
-          history.push("/");
+          navigate("/");
         })
         .catch((errr) => alert(errr.message));
     }
@@ -47,7 +47,7 @@ function Header() {
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         setUser(user);
-        history.push("./home");
+        navigate("./home");
       }
     });
   }, [userName]);
@@ -194,6 +194,7 @@ const Login = styled.a`
   border: 1px solid #f9f9f9;
   border-radius: 4px;
   transition: all 0.2s ease 0s;
+  cursor: pointer;
   &:hover {
     background-color: #f9f9f9;
     color: #000;
