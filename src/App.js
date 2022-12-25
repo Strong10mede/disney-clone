@@ -6,9 +6,7 @@ function App() {
     <div className="app">
       <Router>
         <Routes>
-          <Route path="/">
-            <Login />
-          </Route>
+          <Route path="/" element={<Login />} />
         </Routes>
       </Router>
     </div>
