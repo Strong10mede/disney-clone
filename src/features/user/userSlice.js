@@ -5,7 +5,8 @@ const initialState = {
   email: "",
   photo: "",
 };
-
+//userSlice returns a object containing actions,caseReducers,getInitialState,name,reducer
+//actions
 const userSlice = createSlice({
   name: "user",
   initialState,
@@ -27,8 +28,9 @@ const userSlice = createSlice({
 export const { setUserLoginDetails, setSignOutState } = userSlice.actions;
 
 //below user is the name of slice
+//below functions are used to retrieve the data from current state
 export const selectUserName = (state) => state.user.name;
 export const selectUserEmail = (state) => state.user.email;
 export const selectUserPhoto = (state) => state.user.photo;
-
+export { userSlice };
 export default userSlice.reducer;

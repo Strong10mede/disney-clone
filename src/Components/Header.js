@@ -10,10 +10,12 @@ import {
   selectUserPhoto,
   setUserLoginDetails,
   setSignOutState,
+  userSlice,
 } from "../features/user/userSlice";
 import { useEffect } from "react";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 function Header() {
+  console.log(userSlice);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const userName = useSelector(selectUserName);
