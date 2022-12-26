@@ -2,11 +2,26 @@ import React from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { selectRecommend } from "../features/movies/movieSlice";
+
 function Recommends() {
+  const movies = useSelector(selectRecommend);
+  console.log(movies);
   return (
     <Container>
       <h4>Reommended for You</h4>
-      <Content></Content>
+
+      <Content>
+        {movies &&
+          movies.map((movie, key) => (
+            <Wrap key={key}>
+              {movie.id}
+              <Link to={`/detail/` + movie.id}>
+                <img src={movie.cardImg} alt={movie.title} />
+              </Link>
+            </Wrap>
+          ))}
+      </Content>
     </Container>
   );
 }
