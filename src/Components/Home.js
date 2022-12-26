@@ -7,59 +7,55 @@ import Originals from "./Originals";
 import NewDisney from "./NewDisney";
 import Trending from "./Trending";
 import { useSelector, useDispatch } from "react-redux";
-import { setMovies } from "../features/movies/movieSlice";
+import { setMovies } from "../features/movie/movieSlice";
 import { selectUserName } from "../features/user/userSlice";
 import db from "../firebase";
 import { onSnapshot, collection } from "firebase/firestore";
+import { movieSlice } from "../features/movie/movieSlice";
 function Home() {
+  console.log(movieSlice);
   const dispatch = useDispatch();
   const userName = useSelector(selectUserName);
-  let recommends = [];
-  let newDisneys = [];
-  let originals = [];
-  let trending = [];
 
   useEffect(() => {
-    const readRef = collection(db, "movies");
+    async function fetch() {
+      let recommends = [];
+      let newDisneys = [];
+      let originals = [];
+      let trending = [];
+      const readRef = await collection(db, "movies");
+      onSnapshot(readRef, (snapshot) =>
+        // eslint-disable-next-line array-callback-return
+        snapshot.docs.map((doc) => {
+          console.log(trending);
+          // eslint-disable-next-line default-case
+          switch (doc.data().type) {
+            case "recommend":
+              recommends = [...recommends, { id: doc.id, ...doc.data() }];
+              break;
+            case "new":
+              newDisneys = [...newDisneys, { id: doc.id, ...doc.data() }];
+              break;
 
-    const unsub = onSnapshot(readRef, (snapshot) =>
-      // eslint-disable-next-line array-callback-return
-      snapshot.docs.map((doc) => {
-        // eslint-disable-next-line default-case
-        switch (doc.data().type) {
-          case "recommend":
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-            recommends = [...recommends, { id: doc.id, ...doc.data() }];
-            break;
-
-          case "new":
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-            newDisneys = [...newDisneys, { id: doc.id, ...doc.data() }];
-            break;
-
-          case "original":
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-            originals = [...originals, { id: doc.id, ...doc.data() }];
-            break;
-
-          case "trending":
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-            trending = [...trending, { id: doc.id, ...doc.data() }];
-            break;
-        }
-      })
-    );
-
-    dispatch(
-      setMovies({
-        recommend: recommends,
-        newDisney: newDisneys,
-        original: originals,
-        trending: trending,
-      })
-    );
-
-    return unsub;
+            case "original":
+              originals = [...originals, { id: doc.id, ...doc.data() }];
+              break;
+            case "trending":
+              trending = [...trending, { id: doc.id, ...doc.data() }];
+              break;
+          }
+          dispatch(
+            setMovies({
+              recommend: recommends,
+              newDisney: newDisneys,
+              original: originals,
+              trending: trending,
+            })
+          );
+        })
+      );
+    }
+    fetch();
   }, [userName]);
 
   return (
