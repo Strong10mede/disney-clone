@@ -10,12 +10,12 @@ function Detail() {
 
   useEffect(() => {
     async function fetchData() {
-      const docRef = doc(db, "cities", id);
+      const docRef = doc(db, "movies", id);
       const docSnap = await getDoc(docRef);
 
       if (docSnap.exists()) {
         console.log("Document data:", docSnap.data());
-        setDetailData(doc.data());
+        setDetailData(docSnap.data());
       } else {
         // doc.data() will be undefined in this case
         console.log("No such document!");
